@@ -12,14 +12,13 @@ contract QrCode {
     event ItemSold(uint256 indexed _productId);
 
     address public immutable i_systemOwner;
-    address public immutable i_ethereumAddress;
 
     uint256 public currentTime;
 
     mapping(address manufacturer => bool) public verifiedManufacturer;
     mapping(address manufacturer => mapping(address retailer => bool))
         public manufacturerToRetailer;
-    mapping(address retailer => bool) public retailers;
+    mapping(address retailer => bool) public isRetailer;
 
     mapping(uint256 batchNumber => address manufacturer)
         public batchNumberToManufacturer;
@@ -28,9 +27,8 @@ contract QrCode {
     mapping(uint256 productId => bool) public isStored;
     mapping(uint256 productId => bool) public itemSold;
 
-    constructor(address _ethereumAddress, address _owner) {
+    constructor(address _owner) {
         i_systemOwner = _owner;
-        i_ethereumAddress _ethereumAddress;
     }
 
     function addManufacturer(address manufacturer) external {
@@ -45,8 +43,8 @@ contract QrCode {
             "Action only taken by a verified manufacturer"
         );
         emit RetailerAdded(msg.sender, _retailer);
-        manufacturerToRetailer[msg.sender][retailer] = true;
-        retailers[_retailer] = true;
+        manufacturerToRetailer[msg.sender][_retailer] = true;
+        isRetailer[_retailer] = true;
     }
 
     function storeItem(uint256 _batchNumber, uint256 _productId) external {
@@ -78,28 +76,26 @@ contract QrCode {
     function scanItem(
         uint256 _productId
     ) public view returns (bool, uint256, address, bool) {
-        if (isStored[productId] == true) {
+        if (isStored[_productId] == true) {
             uint256 batchNumber = productIDsToBatchNumbers[_productId];
             address manufacturer = batchNumberToManufacturer[batchNumber];
             bool item_sold = itemSold[_productId];
             return (true, batchNumber, manufacturer, item_sold);
         }
-        return false;
     }
 
-    function itemIsSold(
+    /* function itemIsSold(
         uint256 _productId
-    ) external view onlyRetailer returns (uint256, bool) {
+    ) external view returns (uint256, bool) {
         require(
-            retailers[msg.sender] == true,
+            isRetailer[msg.sender] == true,
             "Action only taken by a verified retailer"
         );
-        if (scanItem(_productId) == true) {
+    
             emit ItemSold(_productId);
             currentTime = block.timestamp;
             itemSold[_productId] = true;
             return currentTime;
-        }
-        return false;
-    }
+
+    } */
 }
