@@ -73,7 +73,7 @@ contract QrCode {
 
     //return with frontend Item Details
     //not sure for the returns
-    function scanItem(
+    /* function scanItem(
         uint256 _productId
     ) public view returns (bool, uint256, address, bool) {
         if (isStored[_productId] == true) {
@@ -82,9 +82,10 @@ contract QrCode {
             bool item_sold = itemSold[_productId];
             return (true, batchNumber, manufacturer, item_sold);
         }
+        else return false;
     }
 
-    /* function itemIsSold(
+    function itemIsSold(
         uint256 _productId
     ) external view returns (uint256, bool) {
         require(
