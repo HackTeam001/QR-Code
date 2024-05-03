@@ -18,16 +18,17 @@ contract QrCode {
     mapping(address manufacturer => bool) public verifiedManufacturer;
     mapping(address manufacturer => address retailer)
         public manufacturerToRetailers;
+
     mapping(address manufacturer => mapping(address retailer => bool))
         public verifiedRetailer;
     mapping(address retailer => bool) public isRetailer;
 
-    mapping(uint256 batchNumber => address manufacturer)
-        public batchNumberToManufacturer;
     mapping(uint256 productId => uint256 batchNumber)
         public productIDsToBatchNumbers;
     mapping(uint256 productId => address manufacturer)
         public productIDsToManufacturer;
+    mapping(uint256 batchNumber => address manufacturer)
+        public batchNumberToManufacturer;
 
     mapping(uint256 productId => bool) public isStored;
     mapping(uint256 productId => bool) public itemSold;
@@ -37,8 +38,8 @@ contract QrCode {
     }
 
     function addManufacturer(address _manufacturer) external {
-        require(msg.sender != address(0), "Invalid address");
         require(msg.sender == i_systemOwner, "Action only taken by owner");
+        require(_manufacturer != address(0), "Invalid address");
         emit ManufacturerAdded(_manufacturer);
         verifiedManufacturer[_manufacturer] = true;
     }
