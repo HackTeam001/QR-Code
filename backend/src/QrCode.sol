@@ -8,7 +8,7 @@ contract QrCode {
         address indexed _retailer
     );
     event ItemStored(uint256 indexed _batchNumber, uint256 indexed _productId);
-    event DeletedItem(uint256 indexed _productId);
+    event ItemDeleted(uint256 indexed _productId);
     event ItemSold(uint256 indexed _productId);
 
     address public immutable i_systemOwner;
@@ -64,6 +64,7 @@ contract QrCode {
             verifiedManufacturer[msg.sender] == true,
             "Action only taken by a verified manufacturer"
         );
+        require(!isStored[_productId], "Product ID is already stored");
         emit ItemStored(_batchNumber, _productId);
         batchNumberToManufacturer[_batchNumber] = msg.sender;
         productIDsToBatchNumbers[_productId] = _batchNumber;
@@ -79,7 +80,7 @@ contract QrCode {
             verifiedManufacturer[msg.sender] == true,
             "Action only taken by a verified manufacturer"
         );
-        emit DeletedItem(_productId);
+        emit ItemDeleted(_productId);
         delete productIDsToBatchNumbers[_productId];
         isStored[_productId] = false;
         currentTime = block.timestamp;
