@@ -65,6 +65,7 @@ contract QrCode {
             "Action only taken by a verified manufacturer"
         );
         require(!isStored[_productId], "Product ID is already stored");
+
         emit ItemStored(_batchNumber, _productId);
         batchNumberToManufacturer[_batchNumber] = msg.sender;
         productIDsToBatchNumbers[_productId] = _batchNumber;
@@ -88,7 +89,7 @@ contract QrCode {
     }
 
     //Return with frontend Item Details (Description, manufacturer)
-    function scanItem(uint256 _productId) public view returns (bool) {
+    function scanItem(uint256 _productId) external view returns (bool) {
         if (isStored[_productId] == true) {
             return true;
         }
