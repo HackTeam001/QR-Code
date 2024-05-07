@@ -10,7 +10,7 @@ contract QrCode {
     event ItemStored(uint256 indexed _batchNumber, uint256 indexed _productId);
     event ItemDeleted(uint256 indexed _productId);
     event ItemSold(uint256 indexed _productId);
-    event BatchTrackedToRetailer(uint256 indexed batchNumber);
+    //event BatchTrackedToRetailer(uint256 indexed batchNumber);
 
     address public immutable i_systemOwner;
 
@@ -26,8 +26,8 @@ contract QrCode {
 
     mapping(uint256 batchNumber => address manufacturer)
         public batchNumberToManufacturer;
-    mapping(uint256 batchNumber => address retailer)
-        public batchNumberToRetailer;
+    //mapping(uint256 batchNumber => address retailer)
+    //public batchNumberToRetailer;
 
     mapping(uint256 productId => address manufacturer)
         public productIDsToManufacturer;
@@ -35,7 +35,7 @@ contract QrCode {
         public productIDsToBatchNumbers;
 
     mapping(uint256 productId => bool) public isStored;
-    mapping(uint256 batchNumber => bool) public batchIsStored; //large manufacturers
+    //mapping(uint256 batchNumber => bool) public batchIsStored; //large manufacturers
     mapping(uint256 productId => bool) public itemSold;
 
     constructor(address _owner) {
@@ -81,28 +81,6 @@ contract QrCode {
         itemSold[_productId] = false;
         currentTime = block.timestamp;
         return currentTime;
-    }
-
-    //by large scale manufacturers
-    function storeItemLargeManufacturers(
-        uint256 _batchNumber
-    ) external returns (uint256) {
-        require(
-            verifiedManufacturer[msg.sender] == true,
-            "Action only taken by a verified manufacturer"
-        );
-        require(!batchIsStored[_batchNumber], "Batch number is already stored");
-        batchNumberToManufacturer[_batchNumber] = msg.sender;
-        currentTime = block.timestamp;
-        return currentTime;
-    }
-
-    function trackBatchesSentToRetailers(
-        uint256 _batchNumber,
-        address _retailer
-    ) external {
-        emit BatchTrackedToRetailer(_batchNumber);
-        batchNumberToRetailer[_batchNumber] = _retailer;
     }
 
     function deleteStoredItem(uint256 _productId) external returns (uint256) {
@@ -184,4 +162,26 @@ contract QrCode {
         bool sold = itemSold[_productID];
         return sold;
     }
+
+    /*//by large scale manufacturers
+    function storeItemLargeManufacturers(
+        uint256 _batchNumber
+    ) external returns (uint256) {
+        require(
+            verifiedManufacturer[msg.sender] == true,
+            "Action only taken by a verified manufacturer"
+        );
+        require(!batchIsStored[_batchNumber], "Batch number is already stored");
+        batchNumberToManufacturer[_batchNumber] = msg.sender;
+        currentTime = block.timestamp;
+        return currentTime;
+    }
+
+    function trackBatchesSentToRetailers(
+        uint256 _batchNumber,
+        address _retailer
+    ) external {
+        emit BatchTrackedToRetailer(_batchNumber);
+        batchNumberToRetailer[_batchNumber] = _retailer;
+    } */
 }
